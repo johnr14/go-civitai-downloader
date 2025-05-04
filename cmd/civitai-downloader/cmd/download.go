@@ -182,7 +182,7 @@ func setupDownloadEnvironment(cmd *cobra.Command, cfg *models.Config) (db *datab
 		Timeout:   0, // Rely on transport timeouts
 		Transport: globalHttpTransport,
 	}
-	fileDownloader = downloader.NewDownloader(mainHttpClient, cfg.ApiKey, cfg)
+	fileDownloader = downloader.NewDownloader(mainHttpClient, cfg.ApiKey, *cfg)
 
 	// --- Setup Image Downloader ---
 	// Use correct viper keys corresponding to bound flags
@@ -193,7 +193,7 @@ func setupDownloadEnvironment(cmd *cobra.Command, cfg *models.Config) (db *datab
 			Timeout:   0,
 			Transport: globalHttpTransport,
 		}
-		imageDownloader = downloader.NewDownloader(imgHttpClient, cfg.ApiKey, cfg)
+		imageDownloader = downloader.NewDownloader(imgHttpClient, cfg.ApiKey, *cfg)
 	}
 	// Add debug log here
 	if imageDownloader != nil {
