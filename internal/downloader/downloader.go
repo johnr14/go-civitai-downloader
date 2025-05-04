@@ -33,7 +33,11 @@ type Downloader struct {
 }
 
 // NewDownloader creates a new Downloader instance.
-func NewDownloader(client *http.Client, apiKey string) *Downloader {
+func NewDownloader(client *http.Client, apiKey string, cfg models.Config) *Downloader {
+	if cfg.ProxyNoAPIKey {
+		log.Info("ProxyNoAPIKey enabled - disabling API key for downloads")
+		apiKey = ""
+	}
 	if client == nil {
 		// Provide a default client if none is passed
 		transport := &http.Transport{
@@ -168,13 +172,13 @@ func (d *Downloader) DownloadFile(targetFilepath string, url string, hashes mode
 	// Set browser-like user agent
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
 
-	// Add authentication header if API key is present
-	log.Debugf("Downloader stored API Key: %s", d.apiKey) // Added Debug Log
+	// Add authentication header if API key is present and not disabled for proxy
+	log.Debugf("Downloader stored API Key (may be disabled by proxy): %s", d.apiKey)
 	if d.apiKey != "" {
-		log.Debug("Adding Authorization header to download request.") // Added Debug Log
+		log.Debug("Adding Authorization header to download request")
 		req.Header.Set("Authorization", "Bearer "+d.apiKey)
 	} else {
-		log.Debug("No API Key found, skipping Authorization header for download.") // Added Debug Log
+		log.Debug("No API Key used (either not provided or disabled by proxy)")
 	}
 
 	resp, err := d.client.Do(req)

@@ -98,8 +98,11 @@ func NewClient(apiKey string, httpClient *http.Client, cfg models.Config) *Clien
 		}
 	}
 
-	// Enhanced API key logging
-	if apiKey != "" {
+	// Handle API key based on proxy settings
+	if cfg.ProxyNoAPIKey {
+		log.Info("ProxyNoAPIKey enabled - disabling API key for all requests")
+		apiKey = ""
+	} else if apiKey != "" {
 		log.Infof("Initializing API client with key: %s", apiKey)
 	} else {
 		log.Warn("Initializing API client without authentication key - some endpoints may be restricted")
