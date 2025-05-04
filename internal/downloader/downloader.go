@@ -36,8 +36,12 @@ type Downloader struct {
 func NewDownloader(client *http.Client, apiKey string) *Downloader {
 	if client == nil {
 		// Provide a default client if none is passed
+		transport := &http.Transport{
+			Proxy: http.ProxyFromEnvironment,
+		}
 		client = &http.Client{
-			Timeout: 15 * time.Minute,
+			Transport: transport,
+			Timeout:   15 * time.Minute,
 		}
 	}
 	return &Downloader{

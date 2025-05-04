@@ -89,7 +89,13 @@ type Client struct {
 // TODO: Initialize and pass a shared http.Client
 func NewClient(apiKey string, httpClient *http.Client, cfg models.Config) *Client {
 	if httpClient == nil {
-		httpClient = &http.Client{Timeout: 30 * time.Second}
+		transport := &http.Transport{
+			Proxy: http.ProxyFromEnvironment,
+		}
+		httpClient = &http.Client{
+			Transport: transport,
+			Timeout:   30 * time.Second,
+		}
 	}
 
 	// Enhanced API key logging
