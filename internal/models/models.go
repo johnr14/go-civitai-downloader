@@ -50,7 +50,8 @@ type (
 		ApiClientTimeoutSec int  `toml:"ApiClientTimeoutSec"`
 
 		// Other
-		LogApiRequests bool `toml:"LogApiRequests"`
+		LogApiRequests   bool `toml:"LogApiRequests"`
+		ProxyNoAPIKey    bool `toml:"ProxyNoAPIKey"` // Disable API key when using proxy
 	}
 
 	// Api Calls and Responses

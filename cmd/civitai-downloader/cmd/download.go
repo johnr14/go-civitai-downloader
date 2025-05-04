@@ -105,6 +105,10 @@ func init() {
 	downloadCmd.Flags().Bool("meta-only", false, "Only download/update metadata files, skip model downloads (overrides config)") // Renamed flag
 	_ = viper.BindPFlag("downloadmetaonly", downloadCmd.Flags().Lookup("meta-only"))
 
+	// Proxy configuration
+	downloadCmd.Flags().Bool("proxy-no-apikey", false, "Disable API key when using proxy (overrides config)")
+	_ = viper.BindPFlag("proxynoapikey", downloadCmd.Flags().Lookup("proxy-no-apikey"))
+
 	// Debugging flags
 	downloadCmd.Flags().Bool("show-config", false, "Show the effective configuration values and exit")
 	downloadCmd.Flags().Bool("debug-print-api-url", false, "Print the constructed API URL for model fetching and exit")
@@ -146,6 +150,12 @@ func setupDownloadEnvironment(cmd *cobra.Command, cfg *models.Config) (db *datab
 	log.Info("Database opened successfully.")
 
 	// --- Concurrency & Downloader Setup ---
+	// Get proxy settings using Viper
+	if viper.GetBool("proxynoapikey") {
+		cfg.ProxyNoAPIKey = true
+		log.Info("ProxyNoAPIKey enabled via command line flag")
+	}
+
 	// Get concurrency level using Viper (respects flag > config > default)
 	concurrencyLevel = viper.GetInt("concurrency") // Use Viper to get value
 
@@ -172,7 +182,7 @@ func setupDownloadEnvironment(cmd *cobra.Command, cfg *models.Config) (db *datab
 		Timeout:   0, // Rely on transport timeouts
 		Transport: globalHttpTransport,
 	}
-	fileDownloader = downloader.NewDownloader(mainHttpClient, cfg.ApiKey)
+	fileDownloader = downloader.NewDownloader(mainHttpClient, cfg.ApiKey, *cfg)
 
 	// --- Setup Image Downloader ---
 	// Use correct viper keys corresponding to bound flags
@@ -183,7 +193,7 @@ func setupDownloadEnvironment(cmd *cobra.Command, cfg *models.Config) (db *datab
 			Timeout:   0,
 			Transport: globalHttpTransport,
 		}
-		imageDownloader = downloader.NewDownloader(imgHttpClient, cfg.ApiKey)
+		imageDownloader = downloader.NewDownloader(imgHttpClient, cfg.ApiKey, *cfg)
 	}
 	// Add debug log here
 	if imageDownloader != nil {

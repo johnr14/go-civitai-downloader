@@ -89,11 +89,25 @@ type Client struct {
 // TODO: Initialize and pass a shared http.Client
 func NewClient(apiKey string, httpClient *http.Client, cfg models.Config) *Client {
 	if httpClient == nil {
-		httpClient = &http.Client{Timeout: 30 * time.Second}
+		transport := &http.Transport{
+			Proxy: http.ProxyFromEnvironment,
+		}
+		httpClient = &http.Client{
+			Transport: transport,
+			Timeout:   30 * time.Second,
+		}
 	}
 
+<<<<<<< HEAD
 	// Enhanced API key logging
 	if apiKey != "" {
+=======
+	// Handle API key based on proxy settings
+	if cfg.ProxyNoAPIKey {
+		log.Info("ProxyNoAPIKey enabled - disabling API key for all requests")
+		apiKey = ""
+	} else if apiKey != "" {
+>>>>>>> proxyhttp
 		log.Infof("Initializing API client with key: %s", apiKey)
 	} else {
 		log.Warn("Initializing API client without authentication key - some endpoints may be restricted")
