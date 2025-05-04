@@ -135,10 +135,18 @@ func loadGlobalConfig(cmd *cobra.Command, args []string) error {
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
-
+	viper.SetEnvPrefix("CIVID") // Set prefix for env vars
 	// Normalize keys (e.g., from config like BaseModels to BASMODELS)
 	// Might help resolve precedence issues with bound flags
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_", "-", "_"))
+
+	// Check environment variable for API key if not set in config
+	if viper.GetString("apikey") == "" {
+		if envKey := os.Getenv("CIVID_DOWNLOADER_APIKEY"); envKey != "" {
+			viper.Set("apikey", envKey)
+			log.Debug("Using API key from CIVID_DOWNLOADER_APIKEY environment variable")
+		}
+	}
 
 	// Set config search paths
 	if cfgFile != "" {
