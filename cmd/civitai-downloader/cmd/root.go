@@ -135,7 +135,7 @@ func loadGlobalConfig(cmd *cobra.Command, args []string) error {
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
-	viper.SetEnvPrefix("CIVID") // Set prefix for env vars
+	viper.SetEnvPrefix("CIVITAI") // Set prefix for env vars
 	// Normalize keys (e.g., from config like BaseModels to BASMODELS)
 	// Might help resolve precedence issues with bound flags
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_", "-", "_"))
