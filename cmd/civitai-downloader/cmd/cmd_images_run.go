@@ -358,7 +358,7 @@ func runImages(cmd *cobra.Command, args []string) {
 		Transport: globalHttpTransport,
 		Timeout:   0,
 	}
-	dl := downloader.NewDownloader(downloadClient, globalConfig.ApiKey)
+	dl := downloader.NewDownloader(downloadClient, globalConfig.ApiKey, globalConfig)
 
 	// --- Target Directory ---
 	finalBaseTargetDir := targetDir
