@@ -308,6 +308,7 @@ func confirmParameters(queryParams models.QueryParameters) bool {
 		"SavePath":       viper.GetString("savepath"),
 		"DatabasePath":   viper.GetString("databasepath"),
 		"BleveIndexPath": viper.GetString("bleveindexpath"),
+		"ApiKey":         maskApiKey(viper.GetString("apikey")), // Show masked API key
 		// Filtering - Model/Version
 		"DownloadAllVersions": viper.GetBool("downloadallversions"),
 		"ModelVersionID":      viper.GetInt("modelversionid"),
