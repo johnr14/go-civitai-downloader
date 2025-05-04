@@ -354,7 +354,7 @@ func runDbVerify(cmd *cobra.Command, args []string) {
 						Timeout:   0, // Rely on transport timeouts
 						Transport: globalHttpTransport,
 					}
-					fileDownloader = downloader.NewDownloader(httpClient, globalConfig.ApiKey)
+					fileDownloader = downloader.NewDownloader(httpClient, globalConfig.ApiKey, *globalConfig)
 					log.Debug("Downloader initialized.")
 				}
 
