@@ -142,9 +142,9 @@ func loadGlobalConfig(cmd *cobra.Command, args []string) error {
 
 	// Check environment variable for API key if not set in config
 	if viper.GetString("apikey") == "" {
-		if envKey := os.Getenv("CIVID_DOWNLOADER_APIKEY"); envKey != "" {
+		if envKey := os.Getenv("CIVITAI_DOWNLOADER_APIKEY"); envKey != "" {
 			viper.Set("apikey", envKey)
-			log.Debug("Using API key from CIVID_DOWNLOADER_APIKEY environment variable")
+			log.Debug("Using API key from CIVITAI_DOWNLOADER_APIKEY environment variable")
 		}
 	}
 
