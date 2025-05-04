@@ -350,7 +350,7 @@ func runDbVerify(cmd *cobra.Command, args []string) {
 						continue
 					}
 					// Create a client instance for the downloader using the global transport
-					httpClient := &http.Client{
+					downloaderHttpClient := &http.Client{
 						Timeout:   0, // Rely on transport timeouts
 						Transport: globalHttpTransport,
 					}
@@ -487,7 +487,7 @@ func runDbRedownload(cmd *cobra.Command, args []string) {
 	// Create a new client instance for this command.
 	// TODO: Refactor client creation/sharing?
 	downloaderHttpClient := &http.Client{Timeout: 30 * time.Minute} // Longer timeout for downloads
-	fileDownloader := downloader.NewDownloader(downloaderHttpClient, globalConfig.ApiKey)
+	fileDownloader := downloader.NewDownloader(downloaderHttpClient, globalConfig.ApiKey, globalConfig)
 
 	// Perform the download, checking the error
 	// Pass the Model Version ID from the database entry
